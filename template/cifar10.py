@@ -52,8 +52,8 @@ class EvoCNNModel(nn.Module):
 class TrainModel(object):
     def __init__(self):
         data_dir = os.path.expanduser('./dataset')
-        trainloader, validate_loader = data_loader.get_train_valid_loader(data_dir, batch_size=128, augment=True, valid_size=0.1, shuffle=True, random_seed=2312390, show_sample=False, num_workers=1, pin_memory=True)
-        #testloader = data_loader.get_test_loader(data_dir, batch_size=128, shuffle=False, num_workers=1, pin_memory=True)
+        trainloader, validate_loader = data_loader.get_train_valid_loader(data_dir, batch_size=64, augment=True, valid_size=0.1, shuffle=True, random_seed=2312390, show_sample=False, num_workers=1, pin_memory=True)
+        #testloader = data_loader.get_test_loader(data_dir, batch_size=64, shuffle=False, num_workers=1, pin_memory=True)
         net = EvoCNNModel()
         cudnn.benchmark = True
         net = net.cuda()
@@ -154,5 +154,3 @@ class RunModel(object):
             f.flush()
             f.close()
 """
-
-
