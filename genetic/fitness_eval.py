@@ -1,42 +1,6 @@
 from utils import Utils, GPUTools
 import importlib
 from multiprocessing import Process
-
-
-
-
-# Class for fitness evaluation
-class FitnessEvaluate(object):
-    def __init__(self, individual, log):
-        self.individual = individual
-        self.log = log
-
-    def generate_to_python_file(self):
-        self.log.info("Begin to generate python file")
-        for indi in self.individual:
-            Utils.generate_pytorch_file(indi)
-        self.log.info("Finish the generation of python file")
-
-    def evaluate(self):
-        """
-        load fitness from cache file
-        """
-        self.log.info('Query fitness from cache')
-        _map = Utils.load_cache_data()
-        _count = 0
-        for indi in self.individual:
-            _key, _str = indi.uuid()
-            if _key in map:
-                _count += 1
-                _acc = _map[_key]
-                self.log.info('Hit the cache for %s, key:%s, acc:%0.5f, assigned_acc:%.5f' % (
-                    indi.id, _key, float(_acc), indi.acc))
-                indi.acc = float(_acc)
-        self.log.info('Total hit %d individuals for fitness' % (_count))
-
-        from utils import Utils, GPUTools
-import importlib
-from multiprocessing import Process
 import time, os, sys
 from asyncio.tasks import sleep
 
@@ -71,6 +35,13 @@ class FitnessEvaluate(object):
         has_evaluated_offspring = False
         for indi in self.individuals:
             if indi.acc < 0:
+#                 has_evaluated_offspring = True
+#                 file_name = indi.id
+#                 self.log.info('Begin to train %s'%(file_name))
+#                 _module = importlib.import_module('.', 'scripts.%s'%(file_name))
+#                 _class = getattr(_module, 'RunModel')
+#                 cls_obj = _class()
+#                 cls_obj.do_work('1', file_name)
                 has_evaluated_offspring = True
                 time.sleep(60)
                 gpu_id = GPUTools.detect_available_gpu_id()
@@ -135,15 +106,9 @@ class FitnessEvaluate(object):
                 if indi.acc == -1:
                     if indi.id not in fitness_map:
                         self.log.warn('The individuals have been evaluated, but the records are not correct, the fitness of %s does not exist in %s, wait 120 seconds'%(indi.id, file_name))
-                        sleep(120)
+                        sleep(120) #
                     indi.acc = fitness_map[indi.id]
         else:
             self.log.info('None offspring has been evaluated')
 
         Utils.save_fitness_to_cache(self.individuals)
-
-
-
-
-
-
