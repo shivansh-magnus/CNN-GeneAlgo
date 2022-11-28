@@ -150,8 +150,7 @@ class Log(object):
     def __get_logger(cls):
         if Log._logger is None:
             logger = logging.getLogger("EvoCNN")
-            formatter = logging.Formatter(
-                '%(asctime)s %(levelname)-8s: %(message)s')
+            formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
             file_handler = logging.FileHandler("main.log")
             file_handler.setFormatter(formatter)
 
@@ -223,7 +222,7 @@ class GPUTools(object):
             return None
         else:
             Log.info('GPU_QUERY-Available GPUs are: [%s], choose GPU#%s to use' % (
-                ','.join(unused_gpu_ids), unused_gpu_ids[0]))
+            ','.join(unused_gpu_ids), unused_gpu_ids[0]))
             return int(unused_gpu_ids[0])
 
     @classmethod
@@ -239,8 +238,7 @@ class GPUTools(object):
             Log.info('GPU_QUERY-None of the GPU is occupied')
             return True
         else:
-            Log.info('GPU_QUERY- GPUs [%s] are occupying' %
-                     (','.join(used_gpu_ids)))
+            Log.info('GPU_QUERY- GPUs [%s] are occupying' % (','.join(used_gpu_ids)))
             return False
 
 
@@ -270,8 +268,7 @@ class Utils(object):
             _key, _str = indi.uuid()
             _acc = indi.acc
             if _key not in _map:
-                Log.info('Add record into cache, id:%s, acc:%.5f' %
-                         (_key, _acc))
+                Log.info('Add record into cache, id:%s, acc:%.5f' % (_key, _acc))
                 f = open('./populations/cache.txt', 'a+')
                 _str = '%s;%.5f;%s\n' % (_key, _acc, _str)
                 f.write(_str)
@@ -339,10 +336,8 @@ class Utils(object):
                             elif _key == 'out':
                                 conv_params['out_channel'] = int(_value)
                             else:
-                                raise ValueError(
-                                    'Unknown key for load conv unit, key_name:%s' % (_key))
-                        conv = ResUnit(
-                            conv_params['number'], conv_params['in_channel'], conv_params['out_channel'])
+                                raise ValueError('Unknown key for load conv unit, key_name:%s' % (_key))
+                        conv = ResUnit(conv_params['number'], conv_params['in_channel'], conv_params['out_channel'])
                         indi.units.append(conv)
                     elif line.startswith('[pool'):
                         pool_params = {}
@@ -354,14 +349,11 @@ class Utils(object):
                             elif _key == 'type':
                                 pool_params['max_or_avg'] = float(_value)
                             else:
-                                raise ValueError(
-                                    'Unknown key for load pool unit, key_name:%s' % (_key))
-                        pool = PoolUnit(
-                            pool_params['number'], pool_params['max_or_avg'])
+                                raise ValueError('Unknown key for load pool unit, key_name:%s' % (_key))
+                        pool = PoolUnit(pool_params['number'], pool_params['max_or_avg'])
                         indi.units.append(pool)
                     else:
-                        print(
-                            'Unknown key for load unit type, line content:%s' % (line))
+                        print('Unknown key for load unit type, line content:%s' % (line))
             pop.individuals.append(indi)
         f.close()
 
@@ -421,8 +413,7 @@ class Utils(object):
                 conv_name = 'self.conv_%d_%d' % (u.in_channel, u.out_channel)
                 if conv_name not in conv_name_list:
                     conv_name_list.append(conv_name)
-                    conv = '%s = BasicBlock(in_planes=%d, planes=%d)' % (
-                        conv_name, u.in_channel, u.out_channel)
+                    conv = '%s = BasicBlock(in_planes=%d, planes=%d)' % (conv_name, u.in_channel, u.out_channel)
                     conv_list.append(conv)
 
         # print('\n'.join(conv_list))
@@ -437,7 +428,7 @@ class Utils(object):
                 out_channel_list.append(out_channel_list[-1])
                 image_output_size = int(image_output_size / 2)
         fully_layer_name = 'self.linear = nn.Linear(%d, %d)' % (
-            image_output_size * image_output_size * out_channel_list[-1], StatusUpdateTool.get_num_class())
+        image_output_size * image_output_size * out_channel_list[-1], StatusUpdateTool.get_num_class())
         # print(fully_layer_name, out_channel_list, image_output_size)
 
         # generate the forward part
@@ -448,8 +439,7 @@ class Utils(object):
             else:
                 last_out_put = 'out_%d' % (i - 1)
             if u.type == 1:
-                _str = 'out_%d = self.conv_%d_%d(%s)' % (
-                    i, u.in_channel, u.out_channel, last_out_put)
+                _str = 'out_%d = self.conv_%d_%d(%s)' % (i, u.in_channel, u.out_channel, last_out_put)
                 forward_list.append(_str)
 
             else:

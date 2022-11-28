@@ -28,3 +28,9 @@ if __name__ == '__main__':
     new_a =[a[i] for i in selected_index]
     print(list(np.asarray(a)[selected_index]))
     print(new_a)
+
+
+
+
+
+
